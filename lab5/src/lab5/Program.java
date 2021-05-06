@@ -7,7 +7,6 @@ import java.util.List;
 public class Program {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
         int n = 10;
         int seed = 1;
         int size = 50;
