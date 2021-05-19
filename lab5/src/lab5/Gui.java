@@ -13,7 +13,7 @@ public class Gui {
 		// okreœlanie widoku
 		// górny panel
 		JFrame frame = new JFrame("nazwa");
-		frame.setSize(800,300);
+		frame.setSize(800,600);
 		
 		
 		JTextArea seed = new JTextArea(1, 10);
@@ -99,12 +99,15 @@ public class Gui {
 		        	it.set_weight(rng.nextInt(1, 29));
 		        	items.add(it);
 		        	
-		        	all_items.append(String.valueOf(it.get_weight()) + ", ");
+		        	all_items.append(String.valueOf(i+1)+"	"+"weight: "+String.valueOf
+		        			(it.get_weight()) + "	"+"value: "+String.valueOf
+		        			(it.get_value())+"\n");
 		        	
 		            if(bag.addNewItem(it)) {
-		            	backpack_items.append(String.valueOf(it.get_weight()) + ", ");
+		            	backpack_items.append(String.valueOf(i+1) + ", ");
 		            }
 		        }
+
 		        value.setText(String.valueOf(bag.getValue()));
 		        remaining.setText(String.valueOf(bag.getRemainingSize()));
 			}
