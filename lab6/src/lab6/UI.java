@@ -50,33 +50,42 @@ public class UI {
 
 		chartPanelCont = new JPanel();
 		chartPanelCont.setBounds(10, 10, 765, 400);
-		frame.getContentPane().add(chartPanelCont);
+		//frame.getContentPane().add(chartPanelCont);
 
 		JLabel lblNewLabel = new JLabel("Wy\u015Bwietl histori\u0119 dla miasta: ");
 		lblNewLabel.setBounds(10, 434, 147, 14);
-		frame.getContentPane().add(lblNewLabel);
-
+		//frame.getContentPane().add(lblNewLabel);
+		chartPanelCont.add(lblNewLabel);
+		
 		showCityField = new JTextField();
 		showCityField.setBounds(184, 426, 111, 20);
-		frame.getContentPane().add(showCityField);
+		//frame.getContentPane().add(showCityField);
+		chartPanelCont.add(showCityField);
+		
 		showCityField.setColumns(10);
 
 		showSubmit = new JButton("Wy\u015Bwietl");
 		showSubmit.setBounds(294, 425, 89, 23);
-		frame.getContentPane().add(showSubmit);
-
+		//frame.getContentPane().add(showSubmit);
+		chartPanelCont.add(showSubmit);
+		
 		JLabel lblWczytajObecnPogod = new JLabel("Wczytaj obecn\u0105 pogod\u0119 dla miasta: ");
 		lblWczytajObecnPogod.setBounds(10, 483, 183, 14);
-		frame.getContentPane().add(lblWczytajObecnPogod);
-
+		//frame.getContentPane().add(lblWczytajObecnPogod);
+		chartPanelCont.add(lblWczytajObecnPogod);
+		
 		loadCityField = new JTextField();
 		loadCityField.setColumns(10);
 		loadCityField.setBounds(184, 484, 111, 20);
-		frame.getContentPane().add(loadCityField);
-
+		//frame.getContentPane().add(loadCityField);
+		chartPanelCont.add(loadCityField);
+		
 		loadSubmit = new JButton("Wczytaj");
 		loadSubmit.setBounds(294, 483, 89, 23);
-		frame.getContentPane().add(loadSubmit);
+		//frame.getContentPane().add(loadSubmit);
+		chartPanelCont.add(loadSubmit);
+		frame.getContentPane().add(chartPanelCont);
+		frame.setVisible(true);
 	}
 
 	private void addEvents() {
