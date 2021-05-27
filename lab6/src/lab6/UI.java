@@ -22,24 +22,33 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.FlowLayout;
 
 public class UI {
 
 	private static DBClient db;
 
 	private JFrame frame;
+	private JPanel mainPanel;
 	private JPanel chartPanelCont;
 	private JTextField showCityField;
-	private JTextField loadCityField;
 	private JButton showSubmit;
 	private JButton loadSubmit;
+
+	
+	public static void main(String[] args) {
+		new UI();
+	}
 
 	public UI() {
 		db = new DBClient();
 		initialize();
 		addEvents();
 	}
-
+	
+	/**
+	 * Metoda inticjalizuje widok u¿ytkownika
+	 */
 	private void initialize() {
 
 		frame = new JFrame();
@@ -48,80 +57,68 @@ public class UI {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
-		chartPanelCont = new JPanel();
-		chartPanelCont.setBounds(10, 10, 765, 400);
-		//frame.getContentPane().add(chartPanelCont);
+		mainPanel = new JPanel();
+		FlowLayout fl_mainPanel = (FlowLayout) mainPanel.getLayout();
+		fl_mainPanel.setHgap(0);
+		mainPanel.setBounds(10, 10, 765, 33);
 
 		JLabel lblNewLabel = new JLabel("Wy\u015Bwietl histori\u0119 dla miasta: ");
 		lblNewLabel.setBounds(10, 434, 147, 14);
-		//frame.getContentPane().add(lblNewLabel);
-		chartPanelCont.add(lblNewLabel);
-		
+		mainPanel.add(lblNewLabel);
+
 		showCityField = new JTextField();
 		showCityField.setBounds(184, 426, 111, 20);
-		//frame.getContentPane().add(showCityField);
-		chartPanelCont.add(showCityField);
-		
+		mainPanel.add(showCityField);
+
 		showCityField.setColumns(10);
 
-		showSubmit = new JButton("Wy\u015Bwietl");
+		showSubmit = new JButton("Pobierz i wy\u015Bwietl");
 		showSubmit.setBounds(294, 425, 89, 23);
-		//frame.getContentPane().add(showSubmit);
-		chartPanelCont.add(showSubmit);
-		
-		JLabel lblWczytajObecnPogod = new JLabel("Wczytaj obecn\u0105 pogod\u0119 dla miasta: ");
-		lblWczytajObecnPogod.setBounds(10, 483, 183, 14);
-		//frame.getContentPane().add(lblWczytajObecnPogod);
-		chartPanelCont.add(lblWczytajObecnPogod);
-		
-		loadCityField = new JTextField();
-		loadCityField.setColumns(10);
-		loadCityField.setBounds(184, 484, 111, 20);
-		//frame.getContentPane().add(loadCityField);
-		chartPanelCont.add(loadCityField);
-		
-		loadSubmit = new JButton("Wczytaj");
+		mainPanel.add(showSubmit);
+
+		loadSubmit = new JButton("Wczytaj obecn\u0105 historie");
 		loadSubmit.setBounds(294, 483, 89, 23);
-		//frame.getContentPane().add(loadSubmit);
-		chartPanelCont.add(loadSubmit);
+		mainPanel.add(loadSubmit);
+		frame.getContentPane().add(mainPanel);
+
+		chartPanelCont = new JPanel();
+		chartPanelCont.setBounds(10, 53, 764, 497);
 		frame.getContentPane().add(chartPanelCont);
 		frame.setVisible(true);
 	}
 
+	/**
+	 * Metoda dodaje eventy do widoku u¿ytkownika. Umo¿liwia to obs³ugê np. klików
+	 */
 	private void addEvents() {
 		showSubmit.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ArrayList<HashMap<String, String>> weathers;
 				try {
-
 					String cityName = showCityField.getText();
-					weathers = db.getWeathersForCity(cityName);
 
-					if (weathers.size() > 0) {
-						plotTempChart(weathers, "Historia dla miasta " + cityName);
-					}
+					Weather newWeather = Api.get(cityName);
+					db.addNewWeather(cityName, newWeather);
+
+					plotChartForCity(cityName);
 				} catch (SQLException e1) {
+					e1.printStackTrace();
+				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 			}
 		});
-		
+
 		loadSubmit.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ArrayList<HashMap<String, String>> weathers;
 				try {
+					String cityName = showCityField.getText();
 
-					String cityName = loadCityField.getText();
+					plotChartForCity(cityName);
 
-					//#############################
-					// Tu pobieramy dane z api
-					//#############################
-					
-					db.addNewWeather(cityName, 20);
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
@@ -129,17 +126,25 @@ public class UI {
 		});
 	}
 
-	public DefaultCategoryDataset getTemperatureDatasetFromDBData(ArrayList<HashMap<String, String>> data) {
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+	/**
+	 * Metoda wyœwietla wykres temperatur na podstawie obecnych danych w bazie
+	 * @param cityName - nazwa miasta do wyœwietlenia
+	 * @throws SQLException
+	 */
+	private void plotChartForCity(String cityName) throws SQLException {
+		ArrayList<HashMap<String, String>> weathers = db.getWeathersForCity(cityName);
 
-		data.forEach((weather) -> {
-			dataset.setValue(Float.parseFloat(weather.get("temp")), "", weather.get("create_time"));
-		});
-
-		return dataset;
+		if (weathers.size() > 0) {
+			plotTempChart(weathers, "Historia dla miasta " + cityName);
+		}
 	}
-
-	public void plotTempChart(ArrayList<HashMap<String, String>> data, String title) {
+	
+	/**
+	 * Metoda umo¿liwia wyœwietlenie wykresu dla podanych danych pogodowych
+	 * @param data
+	 * @param title
+	 */
+	private void plotTempChart(ArrayList<HashMap<String, String>> data, String title) {
 		DefaultCategoryDataset dataset = getTemperatureDatasetFromDBData(data);
 
 		JFreeChart chart = ChartFactory.createBarChart(title, "Data i godzina", "Temperatura", dataset,
@@ -154,4 +159,21 @@ public class UI {
 		chartPanel.setLayout(new BorderLayout(0, 0));
 		chartPanelCont.validate();
 	}
+	
+	/**
+	 * Metoda parsuje dane z bazy do danych obs³ugiwanych przez bibliotekê do wykresów
+	 * @param data
+	 * @return
+	 */
+	private DefaultCategoryDataset getTemperatureDatasetFromDBData(ArrayList<HashMap<String, String>> data) {
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		
+		data.forEach((weather) -> {
+			dataset.setValue(Float.parseFloat(weather.get("temp")), "", weather.get("create_time"));
+		});
+		
+		return dataset;
+	}
+
 }
+

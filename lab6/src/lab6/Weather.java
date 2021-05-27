@@ -3,6 +3,10 @@ package lab6;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Ogólny model pogody
+ *
+ */
 public class Weather
 {
     public int visibility;
@@ -19,6 +23,10 @@ public class Weather
 
     }
 
+    /**
+     * Model pogody
+     *
+     */
     public class weatherDescription
     {
     	public String id;
@@ -26,7 +34,7 @@ public class Weather
     	public String description;
     	public String icon;
     }
-    
+   
     public int getvisibility() { return visibility; }
     public Main getmain() { return main; }
     public List<weatherDescription> getweather() { return weather; }
@@ -36,7 +44,9 @@ public class Weather
     public void setmain(Main main) { this.main = main; }
     public void setweather(ArrayList<weatherDescription> weather) { this.weather = weather; }
     public void setname(String name) { this.name = name; }
-
+    
+    public float getTemp() {return (float) main.temp;}
+    
     public String toString() {
         return String.format("visibility:%d,name:%s,temp:%f,temp_min:%f,temp_max:%f,pressure:%f,id:%s,main:%s,description:%s,icon:%s", visibility,name,main.temp,main.temp_min,main.temp_max,main.pressure,weather.get(0).id,weather.get(0).main,weather.get(0).description,weather.get(0).icon);
     }

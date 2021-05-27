@@ -35,10 +35,10 @@ public class DBClient {
 		return results;
 	}
 
-	public void addNewWeather(String cityName, float temp) throws SQLException {
+	public void addNewWeather(String cityName, Weather weather) throws SQLException {
 		Connection db = DriverManager.getConnection(url, user, passwd);
 
-		String sql = "INSERT INTO `weathers`(`city_name`, `temp`) VALUES ('" + cityName + "', " + temp + ")";
+		String sql = "INSERT INTO `weathers`(`city_name`, `temp`) VALUES ('" + cityName + "', " + weather.getTemp() + ")";
 		Statement stm = db.createStatement();
 		stm.execute(sql);
 	}
