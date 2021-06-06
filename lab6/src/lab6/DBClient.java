@@ -12,7 +12,7 @@ public class DBClient {
 
 	private String url = "jdbc:mysql://localhost:3306/java_project?autoReconnect=true&useSSL=false";
 	private String user = "root";
-	private String passwd = "";
+	private String passwd = "root";
 
 	public ArrayList<HashMap<String, String>> getWeathersForCity(String cityName) throws SQLException {
 		Connection db = DriverManager.getConnection(url, user, passwd);
@@ -37,8 +37,9 @@ public class DBClient {
 
 	public void addNewWeather(String cityName, Weather weather) throws SQLException {
 		Connection db = DriverManager.getConnection(url, user, passwd);
-
-		String sql = "INSERT INTO `weathers`(`city_name`, `temp`) VALUES ('" + cityName + "', " + weather.getTemp() + ")";
+		
+		int tempC=(int) (weather.getTemp()-273.15);
+		String sql = "INSERT INTO `weathers`(`city_name`, `temp`) VALUES ('" + cityName + "', " + tempC + ")";
 		Statement stm = db.createStatement();
 		stm.execute(sql);
 	}

@@ -53,14 +53,15 @@ public class UI {
 
 		frame = new JFrame();
 		frame.setVisible(true);
-		frame.setBounds(100, 100, 800, 600);
+		//frame.setBounds(100, 100, 800, 600);
+		frame.setBounds(100, 100, 1200, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
 		mainPanel = new JPanel();
 		FlowLayout fl_mainPanel = (FlowLayout) mainPanel.getLayout();
 		fl_mainPanel.setHgap(0);
-		mainPanel.setBounds(10, 10, 765, 33);
+		mainPanel.setBounds(210, 10, 765, 33);
 
 		JLabel lblNewLabel = new JLabel("Wy\u015Bwietl histori\u0119 dla miasta: ");
 		lblNewLabel.setBounds(10, 434, 147, 14);
@@ -82,7 +83,8 @@ public class UI {
 		frame.getContentPane().add(mainPanel);
 
 		chartPanelCont = new JPanel();
-		chartPanelCont.setBounds(10, 53, 764, 497);
+		//chartPanelCont.setBounds(10, 53, 764, 497);
+		chartPanelCont.setBounds(10, 53, 1164, 497);
 		frame.getContentPane().add(chartPanelCont);
 		frame.setVisible(true);
 	}
